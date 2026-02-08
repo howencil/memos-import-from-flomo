@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs-extra");
 const { createApiClient } = require("./apiClient");
 const { parseWeixinText } = require("./parseWeixin");
+const { getDefaultArtifactDir } = require("./artifactStore");
 
 function noop() {}
 
@@ -10,7 +11,7 @@ async function importWeixin(options) {
     openApi,
     accessToken,
     txtPath,
-    artifactDir = process.cwd(),
+    artifactDir = getDefaultArtifactDir(),
     onEvent = noop,
     sleepMs,
   } = options;

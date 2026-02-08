@@ -26,6 +26,7 @@ let activeJobId = null;
 const jobs = new Map();
 const uploads = new Map();
 
+fs.removeSync(UPLOAD_ROOT);
 fs.ensureDirSync(UPLOAD_ROOT);
 
 function sendJson(res, status, payload) {
@@ -112,19 +113,30 @@ async function runJob(job, runner) {
     job.result = result;
   } catch (error) {
     job.status = "failed";
-    job.error = {
-      message: error.message,
-      stack: error.stack,
-    };
+    job.error = toPublicError(error);
     appendEvent(job, {
       type: "error",
-      message: error.message,
+      message: job.error.message,
       ts: Date.now(),
     });
   } finally {
     cleanupUpload(job.uploadId);
     activeJobId = null;
   }
+}
+
+function toPublicError(error) {
+  if (!error) {
+    return { message: "任务执行失败" };
+  }
+
+  if (["ENOENT", "EISDIR", "ENOTDIR", "EACCES", "EPERM"].includes(error.code)) {
+    return { message: "文件读取失败，请检查导出文件或路径是否正确" };
+  }
+
+  const rawMessage = String(error.message || "任务执行失败");
+  const message = rawMessage.replace(/\/[^\s]+/g, "<path>");
+  return { message };
 }
 
 function requireSession(res) {

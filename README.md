@@ -41,7 +41,7 @@ http://127.0.0.1:3131
 
 - 当前仅支持单任务串行执行，运行中再次启动任务会返回冲突提示。
 - 会话凭据只保存在服务进程内存中，页面刷新或服务重启后需要重新填写。
-- 删除逻辑依赖项目根目录的 `sendedIds.json`，行为与 CLI 一致。
+- 删除逻辑依赖 `sendedIds.json`，默认存放在系统临时目录 `memos-import-artifacts`（可通过 `MEMOS_ARTIFACT_DIR` 覆盖）。
 
 # flomo
 
@@ -84,7 +84,7 @@ node ./src/main.js <your-api-host> <your-access-token> ./flomo/index.html
 
 > 删除同步数据仅支持删除脚本创建的内容，创建的 tag 请手动删除，因为无法确认 tag 是否有被其他内容使用。
 
-执行完同步数据后如果不符合预期，可以执行下面的命令删除同步的数据。删除会读取同步完成写入到 `sendedIds.json` 文件数据，所以需要保证这个文件存在。
+执行完同步数据后如果不符合预期，可以执行下面的命令删除同步的数据。删除会读取同步完成写入的 `sendedIds.json`，默认路径为系统临时目录 `memos-import-artifacts`（可通过 `MEMOS_ARTIFACT_DIR` 覆盖）。
 
 ```bash
 node ./src/delete.js <your-api-host> <your-access-token>

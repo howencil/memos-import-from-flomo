@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs-extra");
 const { createApiClient } = require("./apiClient");
 const { parseFlomoHtml } = require("./parseFlomo");
+const { getDefaultArtifactDir } = require("./artifactStore");
 
 function noop() {}
 
@@ -10,7 +11,7 @@ async function importFlomo(options) {
     openApi,
     accessToken,
     htmlPath,
-    artifactDir = process.cwd(),
+    artifactDir = getDefaultArtifactDir(),
     onEvent = noop,
     sleepMs,
     apiClient,

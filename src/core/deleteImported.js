@@ -1,11 +1,12 @@
 const path = require("path");
 const fs = require("fs-extra");
 const { createApiClient } = require("./apiClient");
+const { getDefaultArtifactDir } = require("./artifactStore");
 
 function noop() {}
 
 async function deleteImported(options) {
-  const { openApi, accessToken, artifactDir = process.cwd(), onEvent = noop } = options;
+  const { openApi, accessToken, artifactDir = getDefaultArtifactDir(), onEvent = noop } = options;
 
   const client = createApiClient({ openApi, accessToken });
   const idsFilePath = path.join(artifactDir, "sendedIds.json");
